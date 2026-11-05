@@ -7,7 +7,7 @@ type StoreProduct = {
   available: boolean;
 };
 
-const configuredOrigin = Deno.env.get('PUBLIC_SITE_ORIGIN') || 'http://127.0.0.1:5173';
+const configuredOrigin = Deno.env.get('PUBLIC_SITE_ORIGIN') || 'https://kbhnights.vercel.app';
 const allowedOrigins = new Set([configuredOrigin, 'http://localhost:5173', 'http://127.0.0.1:5173']);
 function getCorsHeaders(origin: string | null) {
   return {
@@ -72,7 +72,7 @@ Deno.serve(async request => {
   const supabase = createClient(supabaseUrl, serviceRoleKey, { auth: { persistSession: false } });
   const rateLimitKey = await crypto.subtle.importKey('raw', new TextEncoder().encode(rateLimitSecret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
   const ipHash = toHex(new Uint8Array(await crypto.subtle.sign('HMAC', rateLimitKey, new TextEncoder().encode(clientIp))));
-  const { data: withinRateLimit, error: rateLimitError } = await supabase.rpc('consume_order_rate_limit', { p_ip_hash: ipHash, p_limit: 15, p_window_seconds: 600 });
+  const { data: withinRateLimit, error: rateLimitError } = await supabase.rpc('consume_order_rate_limit', { p_ip_hash: ipHash, p_limit:600, p_window_seconds: 600 });
   if (rateLimitError) return respond({ error: 'Order service is temporarily unavailable.' }, 500);
   if (!withinRateLimit) return respond({ error: 'Too many order attempts. Please wait a few minutes and try again.' }, 429);
 

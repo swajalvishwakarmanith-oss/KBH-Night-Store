@@ -42,7 +42,9 @@ Restart the Vite server after changing environment values. Run `npm run dev`, th
 
 ## 5. Deploy the order Edge Function
 
-Deploy `supabase/functions/create-order/index.ts` as the `create-order` Edge Function using the Supabase dashboard editor or CLI. Configure `ORDER_RATE_LIMIT_SECRET` and `PUBLIC_SITE_ORIGIN` as function secrets; Supabase provides `SUPABASE_URL` and its server key at runtime.
+In Vercel, add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` under **Project Settings → Environment Variables**, then redeploy the site. These are build-time variables, so changing them requires a new deployment.
+
+Deploy `supabase/functions/create-order/index.ts` as the `create-order` Edge Function using the Supabase dashboard editor or CLI. Configure `ORDER_RATE_LIMIT_SECRET` and `PUBLIC_SITE_ORIGIN` as function secrets. Set `PUBLIC_SITE_ORIGIN` to `https://kbhnights.vercel.app` so checkout requests from the deployed site pass the function's CORS allowlist. Supabase provides `SUPABASE_URL` and its server key at runtime. After changing function code or secrets, redeploy the Edge Function.
 
 ## Orders and payment behavior
 
